@@ -40,8 +40,24 @@ jobs:
       if: github.event_name == 'push'
       run: terraform test
 
-  terraform:
-    needs: test
+  sonarcloud:
+    needs: [test]
+    if: github.event_name != 'pull_request' || github.ref == 'refs/heads/main'
+    name: SonarCloud
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  create-infrastructure:
+    needs: [test]
+    if: github.ref == 'refs/heads/main'
     name: 'Plan'
     runs-on: ubuntu-latest
     environment: dev
@@ -66,8 +82,8 @@ jobs:
       run: terraform fmt -check
 
     - name: Terraform Plan
-      run: terraform plan -input=false
+      run: terraform plan -var bmb_users_pool="${{ env.BMB_USER_POOL }}"
 
     - name: Terraform Apply
-      if: github.ref == 'refs/heads/"main"' && false
-      run: terraform apply -input=false
+      if: github.ref == 'refs/heads/main' && false
+      run: terraform apply -var bmb_users_pool="${{ env.BMB_USER_POOL }}"
