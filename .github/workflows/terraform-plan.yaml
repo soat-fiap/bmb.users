@@ -9,6 +9,7 @@ env:
   TF_API_TOKEN: "${{ secrets.TF_API_TOKEN }}"
   TF_WORKSPACE: "${{ vars.TF_WORKSPACE }}"
   CONFIG_DIRECTORY: "./"
+	environment: dev
 
 jobs:
   create-infrastructure:
@@ -16,7 +17,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Terraform goes here
-        run: echo ${{ env.TF_CLOUD_ORGANIZATION }}
+        run: echo ${{ env.TF_CLOUD_ORGANIZATION }} ${{ env.TF_WORKSPACE }}
 
   terraform:
     name: "Terraform Plan"
