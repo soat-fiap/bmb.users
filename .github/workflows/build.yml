@@ -1,4 +1,4 @@
-name: 'Build'
+name: 'Terraform build'
 
 on:
   push:
@@ -8,6 +8,12 @@ on:
         description: "Manual deploy"
         default: "Manual deploy"
 
+env:
+  TF_CLOUD_ORGANIZATION: "${{ vars.BMB_TF_ORGANIZATION }}"
+  TF_API_TOKEN: "${{ secrets.TF_API_TOKEN }}"
+  TF_WORKSPACE: "${{ vars.TF_WORKSPACE }}"
+  CONFIG_DIRECTORY: "./"
+
 permissions:
   contents: read
 
@@ -16,7 +22,7 @@ jobs:
   test:
     name: 'Test'
     runs-on: ubuntu-latest
-    environment: dev
+    environment: uat
 
     defaults:
       run:
@@ -54,36 +60,34 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   deploy:
-    needs: [sonarcloud, test]
-    uses: ./.github/workflows/deploy.yml
-    secrets: inherit
+    needs: [test]
+    if: github.ref == 'refs/heads/main'
+    name: "Terraform Apply"
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
 
-    # create-infrastructure:
-    
-  #   needs: [test]
-  #   if: github.event_name != 'pull_request' || github.ref == 'refs/heads/main'
-  #   name: 'Plan'
-  #   runs-on: ubuntu-latest
-  #   environment: uat
-  #   env:
-  #     TF_VAR_user_pool_name: "${{ vars.BMB_USER_POOL_NAME }}"
+      - name: Upload Configuration
+        uses: hashicorp/tfc-workflows-github/actions/upload-configuration@v1.3.1
+        id: apply-upload
+        with:
+          workspace: ${{ env.TF_WORKSPACE }}
+          directory: ${{ env.CONFIG_DIRECTORY }}
 
-  #   defaults:
-  #     run:
-  #       shell: bash
-    
-  #   steps:
-  #   - name: Checkout
-  #     uses: actions/checkout@v4
+      - name: Create Apply Run
+        uses: hashicorp/tfc-workflows-github/actions/create-run@v1.3.1
+        id: apply-run
+        with:
+          workspace: ${{ env.TF_WORKSPACE }}
+          configuration_version: ${{ steps.apply-upload.outputs.configuration_version_id }}
 
-  #   - name: Setup Terraform
-  #     uses: hashicorp/setup-terraform@v1
-  #     with:
-  #       cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
-
-  #   - name: Terraform Init
-  #     run: terraform init -upgrade
-
-  #   - name: Terraform Apply
-  #     if: github.ref == 'refs/heads/main'
-  #     run: terraform apply -var user_pool_name="${{ vars.BMB_USER_POOL_NAME }}"
+      - name: Apply
+        uses: hashicorp/tfc-workflows-github/actions/apply-run@v1.3.1
+        if: fromJSON(steps.apply-run.outputs.payload).data.attributes.actions.IsConfirmable
+        id: apply
+        with:
+          run: ${{ steps.apply-run.outputs.run_id }}
+          comment: "Apply Run from GitHub Actions CI ${{ github.sha }}"
