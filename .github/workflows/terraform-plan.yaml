@@ -1,4 +1,5 @@
 # https://github.com/hashicorp-education/learn-terraform-github-actions/tree/main/.github/workflows
+# https://github.com/hashicorp/tfc-workflows-github
 name: "Terraform Plan"
 
 on:
