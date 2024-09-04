@@ -9,10 +9,10 @@ env:
   TF_API_TOKEN: "${{ secrets.TF_API_TOKEN }}"
   TF_WORKSPACE: "${{ vars.TF_WORKSPACE }}"
   CONFIG_DIRECTORY: "./"
-	environment: dev
 
 jobs:
   create-infrastructure:
+    environment: dev
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -20,6 +20,7 @@ jobs:
         run: echo ${{ env.TF_CLOUD_ORGANIZATION }} ${{ env.TF_WORKSPACE }}
 
   terraform:
+    environment: dev
     name: "Terraform Plan"
     runs-on: ubuntu-latest
     permissions:
