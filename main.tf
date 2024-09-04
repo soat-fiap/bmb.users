@@ -1,11 +1,11 @@
-terraform {
-  backend "remote" {
-    organization = "FiapPostech-SOAT"
-    workspaces {
-      name = "bmb-users"
-    }
-  }
-}
+# terraform {
+#   backend "remote" {
+#     organization = "FiapPostech-SOAT"
+#     workspaces {
+#       name = "bmb-users"
+#     }
+#   }
+# }
 
 resource "aws_cognito_user_pool" "bmb_user_pool" {
   name                     = var.user_pool_name
