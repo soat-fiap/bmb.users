@@ -2,8 +2,6 @@ name: 'Terraform'
 
 on:
   push:
-  pull_request:
-    branches: [ "main" ]
   workflow_dispatch:
     inputs:
       name:
@@ -80,9 +78,6 @@ jobs:
 
     - name: Terraform Init
       run: terraform init -upgrade
-
-    - name: Terraform Plan
-      run: terraform plan -var user_pool_name="${{ env.BMB_USER_POOL_NAME }}"
 
     - name: Terraform Apply
       if: github.ref == 'refs/heads/main'
