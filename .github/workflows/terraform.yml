@@ -25,6 +25,10 @@ jobs:
         shell: bash
 
     steps:
+    - name: BMB_USER_POOL_NAME
+      run: echo ${{ env.BMB_USER_POOL_NAME }}
+    - name: BMB_USER_POOL_NAME-dev
+      run: echo ${{ env.BMB_USER_POOL_NAME-dev }}
     - name: Checkout
       uses: actions/checkout@v4
 
