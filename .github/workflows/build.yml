@@ -1,4 +1,4 @@
-name: 'Terraform'
+name: 'Build'
 
 on:
   push:
@@ -16,7 +16,7 @@ jobs:
   test:
     name: 'Test'
     runs-on: ubuntu-latest
-    environment: uat
+    environment: dev
 
     defaults:
       run:
@@ -53,32 +53,37 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-  create-infrastructure:
+  deploy:
+    needs: [sonarcloud, test]
+    uses: ./.github/workflows/deploy.yml
+    secrets: inherit
+
+    # create-infrastructure:
     
-    needs: [test]
-    if: github.event_name != 'pull_request' || github.ref == 'refs/heads/main'
-    name: 'Plan'
-    runs-on: ubuntu-latest
-    environment: uat
-    env:
-      TF_VAR_user_pool_name: "${{ vars.BMB_USER_POOL_NAME }}"
+  #   needs: [test]
+  #   if: github.event_name != 'pull_request' || github.ref == 'refs/heads/main'
+  #   name: 'Plan'
+  #   runs-on: ubuntu-latest
+  #   environment: uat
+  #   env:
+  #     TF_VAR_user_pool_name: "${{ vars.BMB_USER_POOL_NAME }}"
 
-    defaults:
-      run:
-        shell: bash
+  #   defaults:
+  #     run:
+  #       shell: bash
     
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v4
+  #   steps:
+  #   - name: Checkout
+  #     uses: actions/checkout@v4
 
-    - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v1
-      with:
-        cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+  #   - name: Setup Terraform
+  #     uses: hashicorp/setup-terraform@v1
+  #     with:
+  #       cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
-    - name: Terraform Init
-      run: terraform init -upgrade
+  #   - name: Terraform Init
+  #     run: terraform init -upgrade
 
-    - name: Terraform Apply
-      if: github.ref == 'refs/heads/main'
-      run: terraform apply -var user_pool_name="${{ env.BMB_USER_POOL_NAME }}"
+  #   - name: Terraform Apply
+  #     if: github.ref == 'refs/heads/main'
+  #     run: terraform apply -var user_pool_name="${{ vars.BMB_USER_POOL_NAME }}"
