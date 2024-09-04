@@ -22,7 +22,7 @@ jobs:
   test:
     name: 'Test'
     runs-on: ubuntu-latest
-    environment: uat
+    environment: dev
 
     defaults:
       run:
@@ -64,6 +64,7 @@ jobs:
     if: github.ref == 'refs/heads/main'
     name: "Terraform Apply"
     runs-on: ubuntu-latest
+    environment: dev
     permissions:
       contents: read
     steps:
