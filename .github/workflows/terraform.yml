@@ -82,8 +82,8 @@ jobs:
       run: terraform init -upgrade
 
     - name: Terraform Plan
-      run: terraform plan
+      run: terraform plan -var user_pool_name="${{ env.BMB_USER_POOL_NAME }}"
 
     - name: Terraform Apply
       if: github.ref == 'refs/heads/main'
-      run: terraform apply
+      run: terraform apply -var user_pool_name="${{ env.BMB_USER_POOL_NAME }}"
