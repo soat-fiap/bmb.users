@@ -11,6 +11,13 @@ env:
   CONFIG_DIRECTORY: "./"
 
 jobs:
+  create-infrastructure:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Terraform goes here
+        run: echo ${{ env.TF_CLOUD_ORGANIZATION }}
+
   terraform:
     name: "Terraform Plan"
     runs-on: ubuntu-latest
