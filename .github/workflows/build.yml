@@ -84,11 +84,13 @@ jobs:
         with:
           workspace: ${{ env.TF_WORKSPACE }}
           configuration_version: ${{ steps.apply-upload.outputs.configuration_version_id }}
+          message: "Plan Run from GitHub Actions CI ${{ github.sha }}"
+          TF_VAR_user_pool_name: "italo-user-pool"
 
-      - name: Apply
-        uses: hashicorp/tfc-workflows-github/actions/apply-run@v1.3.1
-        if: fromJSON(steps.apply-run.outputs.payload).data.attributes.actions.IsConfirmable
-        id: apply
-        with:
-          run: ${{ steps.apply-run.outputs.run_id }}
-          comment: "Apply Run from GitHub Actions CI ${{ github.sha }}"
+      # - name: Apply
+      #   uses: hashicorp/tfc-workflows-github/actions/apply-run@v1.3.1
+      #   if: fromJSON(steps.apply-run.outputs.payload).data.attributes.actions.IsConfirmable
+      #   id: apply
+      #   with:
+      #     run: ${{ steps.apply-run.outputs.run_id }}
+      #     comment: "Apply Run from GitHub Actions CI ${{ github.sha }}"
