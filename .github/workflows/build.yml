@@ -86,7 +86,7 @@ jobs:
           configuration_version: ${{ steps.apply-upload.outputs.configuration_version_id }}
           message: "Plan Run from GitHub Actions CI ${{ github.sha }}"
         env:
-          TF_VAR_user_pool_name: "italo-user-pool"
+          TF_VAR_user_pool_name: "\"ami-abc123\""
 
       # - name: Apply
       #   uses: hashicorp/tfc-workflows-github/actions/apply-run@v1.3.1
