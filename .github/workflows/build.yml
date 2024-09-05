@@ -85,6 +85,7 @@ jobs:
           workspace: ${{ env.TF_WORKSPACE }}
           configuration_version: ${{ steps.apply-upload.outputs.configuration_version_id }}
           message: "Plan Run from GitHub Actions CI ${{ github.sha }}"
+        env:  
           TF_VAR_user_pool_name: "italo-user-pool"
 
       # - name: Apply
