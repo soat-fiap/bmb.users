@@ -24,6 +24,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Create .auto.tfvars file
+        run: |
+          cat <<EOF > eks.auto.tfvars
+          user_pool_name = "${{ vars.BMB_USER_POOL_NAME }}"
+          EOF
+
       - name: Upload Configuration
         uses: hashicorp/tfc-workflows-github/actions/upload-configuration@v1.3.1
         id: plan-upload
@@ -31,6 +37,7 @@ jobs:
           workspace: ${{ env.TF_WORKSPACE }}
           directory: ${{ env.CONFIG_DIRECTORY }}
           speculative: true
+
 
       - name: Create Plan Run
         uses: hashicorp/tfc-workflows-github/actions/create-run@v1.3.1
