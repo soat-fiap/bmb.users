@@ -44,7 +44,7 @@ resource "aws_cognito_user_pool_client" "bmb_test_client" {
 }
 
 resource "aws_cognito_identity_pool" "bmb_identity_pool" {
-  identity_pool_name               = "${var.user_pool_name} _identity"
+  identity_pool_name               = "${var.user_pool_name}_identity"
   allow_unauthenticated_identities = false
   cognito_identity_providers {
     client_id               = aws_cognito_user_pool_client.bmb_test_client.id
