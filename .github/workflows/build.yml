@@ -91,4 +91,4 @@ jobs:
         with:
           workspace: ${{ env.TF_WORKSPACE }}
           configuration_version: ${{ steps.apply-upload.outputs.configuration_version_id }}
-          message: "Create Run from GitHub Actions CI ${{ github.env }}-${{ github.sha }}"
+          message: "Create Run from GitHub Actions CI ${{ github.sha }}"
