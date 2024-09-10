@@ -44,7 +44,7 @@ resource "aws_cognito_user_pool_client" "bmb_test_client" {
 }
 
 resource "aws_cognito_identity_pool" "bmb_identity_pool" {
-  identity_pool_name               = "bmb_identity_pool"
+  identity_pool_name               = "${var.user_pool_name} _identity"
   allow_unauthenticated_identities = false
   cognito_identity_providers {
     client_id               = aws_cognito_user_pool_client.bmb_test_client.id
@@ -69,7 +69,7 @@ resource "aws_cognito_identity_pool_provider_principal_tag" "identity_provider_t
 
 
 resource "aws_cognito_user_pool_domain" "main" {
-  domain       = "bmb-users-fiap"
+  domain       = var.user_pool_name
   user_pool_id = aws_cognito_user_pool.bmb_user_pool.id
 }
 
