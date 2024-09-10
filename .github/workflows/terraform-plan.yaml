@@ -31,6 +31,12 @@ jobs:
           workspace: ${{ env.TF_WORKSPACE }}
           directory: ${{ env.CONFIG_DIRECTORY }}
           speculative: true
+          
+      - name: Create .auto.tfvars file
+        run: |
+          cat <<EOF > eks.auto.tfvars
+          user_pool_name = "teste_italo"
+          EOF
 
       - name: Create Plan Run
         uses: hashicorp/tfc-workflows-github/actions/create-run@v1.3.1
