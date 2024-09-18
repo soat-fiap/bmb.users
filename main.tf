@@ -1,12 +1,3 @@
-# terraform {
-#   backend "remote" {
-#     organization = "FiapPostech-SOAT"
-#     workspaces {
-#       name = "bmb-users"
-#     }
-#   }
-# }
-
 resource "aws_cognito_user_pool" "bmb_user_pool" {
   name                     = var.user_pool_name
   auto_verified_attributes = ["email"]
@@ -67,7 +58,6 @@ resource "aws_cognito_identity_pool_provider_principal_tag" "identity_provider_t
   }
 }
 
-
 resource "aws_cognito_user_pool_domain" "main" {
   domain       = var.user_pool_name
   user_pool_id = aws_cognito_user_pool.bmb_user_pool.id
@@ -83,4 +73,43 @@ resource "aws_cognito_user_group" "kitchen" {
   name         = "kitchen"
   user_pool_id = aws_cognito_user_pool.bmb_user_pool.id
   description  = "Kitchen staff"
+}
+
+resource "aws_cognito_user" "kitchen_user" {
+  username                 = "25297503000"
+  user_pool_id             = aws_cognito_user_pool.bmb_user_pool.id
+  message_action           = "SUPPRESS"
+  password                 = "TempPass123!"
+
+  attributes = {
+    name           = "Cozinha"
+    email          = "cozinha@techchallenge.com"
+    email_verified = true
+  }
+}
+
+resource "aws_cognito_user" "admin_user" {
+  username                 = "32747126048"
+  user_pool_id             = aws_cognito_user_pool.bmb_user_pool.id
+  message_action           = "SUPPRESS"
+  password                 = "TempPass123!"
+
+  attributes = {
+    name           = "Admin"
+    email          = "admin@techchallenge.com"
+    email_verified = true
+  }
+}
+
+resource "aws_cognito_user" "customer_user" {
+  username                 = "3131764016"
+  user_pool_id             = aws_cognito_user_pool.bmb_user_pool.id
+  message_action           = "SUPPRESS"
+  password                 = "TempPass123!"
+
+  attributes = {
+    name           = "Customer"
+    email          = "customer@techchallenge.com"
+    email_verified = true
+  }
 }
