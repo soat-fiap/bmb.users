@@ -102,7 +102,7 @@ resource "aws_cognito_user" "admin_user" {
 }
 
 resource "aws_cognito_user" "customer_user" {
-  username                 = "3131764016"
+  username                 = "91121682030"
   user_pool_id             = aws_cognito_user_pool.bmb_user_pool.id
   message_action           = "SUPPRESS"
   password                 = "TempPass123!"
