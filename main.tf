@@ -16,13 +16,12 @@ resource "aws_cognito_user_pool" "bmb_user_pool" {
     name                     = "email"
     required                 = true
   }
-
   tags = {
     Terraform = "true"
   }
 }
 
-resource "aws_cognito_user_pool_client" "bmb_test_client" {
+resource "aws_cognito_user_pool_client" "bmb_api_client" {
   name         = "bmb test client"
   user_pool_id = aws_cognito_user_pool.bmb_user_pool.id
   supported_identity_providers = compact([
@@ -38,7 +37,7 @@ resource "aws_cognito_identity_pool" "bmb_identity_pool" {
   identity_pool_name               = "${var.user_pool_name}_identity"
   allow_unauthenticated_identities = false
   cognito_identity_providers {
-    client_id               = aws_cognito_user_pool_client.bmb_test_client.id
+    client_id               = aws_cognito_user_pool_client.bmb_api_client.id
     provider_name           = aws_cognito_user_pool.bmb_user_pool.endpoint
     server_side_token_check = false
   }
@@ -75,11 +74,17 @@ resource "aws_cognito_user_group" "kitchen" {
   description  = "Kitchen staff"
 }
 
+resource "aws_cognito_user_group" "customer" {
+  name         = "customer"
+  user_pool_id = aws_cognito_user_pool.bmb_user_pool.id
+  description  = "Customers"
+}
+
 resource "aws_cognito_user" "kitchen_user" {
-  username                 = "25297503000"
-  user_pool_id             = aws_cognito_user_pool.bmb_user_pool.id
-  message_action           = "SUPPRESS"
-  password                 = "TempPass123!"
+  username       = "25297503000"
+  user_pool_id   = aws_cognito_user_pool.bmb_user_pool.id
+  message_action = "SUPPRESS"
+  password       = "TempPass123!"
 
   attributes = {
     name           = "Cozinha"
@@ -89,10 +94,10 @@ resource "aws_cognito_user" "kitchen_user" {
 }
 
 resource "aws_cognito_user" "admin_user" {
-  username                 = "32747126048"
-  user_pool_id             = aws_cognito_user_pool.bmb_user_pool.id
-  message_action           = "SUPPRESS"
-  password                 = "TempPass123!"
+  username       = "32747126048"
+  user_pool_id   = aws_cognito_user_pool.bmb_user_pool.id
+  message_action = "SUPPRESS"
+  password       = "TempPass123!"
 
   attributes = {
     name           = "Admin"
@@ -102,10 +107,10 @@ resource "aws_cognito_user" "admin_user" {
 }
 
 resource "aws_cognito_user" "customer_user" {
-  username                 = "91121682030"
-  user_pool_id             = aws_cognito_user_pool.bmb_user_pool.id
-  message_action           = "SUPPRESS"
-  password                 = "TempPass123!"
+  username       = "91121682030"
+  user_pool_id   = aws_cognito_user_pool.bmb_user_pool.id
+  message_action = "SUPPRESS"
+  password       = "TempPass123!"
 
   attributes = {
     name           = "Customer"
