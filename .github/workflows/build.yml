@@ -98,3 +98,11 @@ jobs:
         with:
           run: ${{ steps.apply-run.outputs.run_id }}
           comment: "Confirmed from GitHub Actions CI ${{ github.sha }}"
+
+      - name: Create Destroy plan
+        uses: hashicorp/tfc-workflows-github/actions/create-run@v1.3.1
+        id: destroy-plan
+        with:
+          workspace: ${{ env.TF_WORKSPACE }}
+          configuration_version: ${{ steps.plan-upload.outputs.configuration_version_id }}
+          is_destroy: true
