@@ -67,6 +67,8 @@ jobs:
     environment: dev
     permissions:
       contents: read
+    outputs:
+      CONFIG_VERSION: ${{ steps.apply-upload.outputs.configuration_version_id }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -105,4 +107,20 @@ jobs:
         with:
           workspace: ${{ env.TF_WORKSPACE }}
           configuration_version: ${{ steps.plan-upload.outputs.configuration_version_id }}
+          is_destroy: true
+
+  destroy-plan:
+    name: "Create terraform destroy plan"
+    needs: [deploy]
+    runs-on: ubuntu-latest
+      
+    steps:
+      - name: Create destroy plan
+        uses: hashicorp/tfc-workflows-github/actions/create-run@v1.3.1
+        id: destroy-plan
+        continue-on-error: true
+        with:
+          workspace: ${{ vars.TF_WORKSPACE }}
+          configuration_version: ${{ needs.deploy.outputs.CONFIG_VERSION }}  
+          message: "Create Destroy run from GitHub Actions CI ${{ github.sha }}"
           is_destroy: true
