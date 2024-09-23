@@ -105,13 +105,13 @@ jobs:
     name: "Create terraform destroy plan"
     needs: [deploy]
     runs-on: ubuntu-latest
-      
+    environment: dev      
     steps:
       - name: Create destroy plan
         uses: hashicorp/tfc-workflows-github/actions/create-run@v1.3.1
         id: destroy-plan
         with:
-          workspace: "${{ vars.TF_WORKSPACE }}"
+          workspace: "${{ env.TF_WORKSPACE }}"
           configuration_version: "${{ needs.deploy.outputs.CONFIG_VERSION }}"
           message: "Create Destroy run from GitHub Actions CI ${{ github.sha }}"
           is_destroy: true
