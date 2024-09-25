@@ -1,4 +1,4 @@
-# bmb.users
+# bmb.users (demo)
 
 [![Terraform build](https://github.com/soat-fiap/bmb.users/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/soat-fiap/bmb.users/actions/workflows/build.yml)
 
