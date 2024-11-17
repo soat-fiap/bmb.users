@@ -10,4 +10,4 @@ This Terraform configuration creates an Amazon Cognito User Pool. Amazon Cognito
 
 ## This repo on the infrastructure
 
-![Architecture Diagram](aws-infra-phase-3.png)
+![Architecture Diagram](aws-infra-phase-4.png)
