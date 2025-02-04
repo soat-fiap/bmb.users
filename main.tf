@@ -21,9 +21,11 @@ resource "aws_cognito_user_pool" "bmb_user_pool" {
   }
 }
 
+
 resource "aws_cognito_user_pool_client" "bmb_api_client" {
-  name         = "bmb test client"
-  user_pool_id = aws_cognito_user_pool.bmb_user_pool.id
+  name            = "bmb test client"
+  user_pool_id    = aws_cognito_user_pool.bmb_user_pool.id
+  generate_secret = true
   supported_identity_providers = compact([
     "COGNITO",
   ])
@@ -31,6 +33,7 @@ resource "aws_cognito_user_pool_client" "bmb_api_client" {
   allowed_oauth_flows_user_pool_client = true
   allowed_oauth_flows                  = ["code", "implicit"]
   allowed_oauth_scopes                 = ["email", "openid"]
+  explicit_auth_flows                  = ["ALLOW_USER_SRP_AUTH", "ALLOW_REFRESH_TOKEN_AUTH"]
 }
 
 resource "aws_cognito_identity_pool" "bmb_identity_pool" {
